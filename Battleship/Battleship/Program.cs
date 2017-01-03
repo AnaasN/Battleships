@@ -15,7 +15,7 @@ namespace ConsoleApplication1
             public int Size;
         }
 
-        const string TrainingGame = @"C:\Users\amand_000\Documents\Visual Studio 2015\Projects\Training.txt";
+        const string TrainingGame = @"C:\path to training.txt";
 
         private static void GetRowColumn(ref int Row, ref int Column)
         {
