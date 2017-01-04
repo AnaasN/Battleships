@@ -1,4 +1,4 @@
-﻿// Notre Dame College - Computer Science A Level Year 1 - Trial Exam January 2017
+// Notre Dame College - Computer Science A Level Year 1 - Trial Exam January 2017 do not reproduce unless allowed by notre dame
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace ConsoleApplication1
             public int Size;
         }
 
-        const string TrainingGame = @"C:\path to training.txt";
+        const string TrainingGame = @"\Visual Studio 2015\Projects\Training.txt";
 
         private static void GetRowColumn(ref int Row, ref int Column)
         {
@@ -54,7 +54,6 @@ namespace ConsoleApplication1
                 }
                 if(!OutOfRange)
                 {
-                   
                     UserInputFailled = true;
                 }
                
@@ -94,19 +93,28 @@ namespace ConsoleApplication1
             }
         }
 
-        private static void LoadGame(string TrainingGame, ref char[,] Board)
+        private static void LoadGame(string TrainingGame, ref char[,] Board, ref bool inFileError)//exception handling added. remember to reformat the txt file.
         {
             string Line = "";
             StreamReader BoardFile = new StreamReader(TrainingGame);
-            for (int Row = 0; Row < 10; Row++)
+            try
             {
-                Line = BoardFile.ReadLine();
-                for (int Column = 0; Column < 10; Column++)
+                for (int Row = 0; Row < 10; Row++)
                 {
-                    Board[Row, Column] = Line[Column];
+                    Line = BoardFile.ReadLine();
+                    for (int Column = 0; Column < 10; Column++)
+                    {
+                        Board[Row, Column] = Line[Column];
+                    }
                 }
+                BoardFile.Close();
             }
-            BoardFile.Close();
+            catch (Exception)
+            {
+                Console.WriteLine("An error has occoured while attempting to read the Training.txt file.\n  Please check the file and restart.");
+                inFileError = true;
+            }
+            
         }
 
         private static void PlaceRandomShips(ref char[,] Board, ShipType[] Ships)
@@ -317,12 +325,13 @@ namespace ConsoleApplication1
             Ships[4].Size = 2;
         }
 
-        static void Main(string[] args)
+        static void Main(string[] args)//exception handling added.
         {
 
             ShipType[] Ships = new ShipType[5];
             char[,] Board = new char[10, 10];
             int MenuOption = 0;
+            bool FileError = false;
 
             while (MenuOption != 9)
             {
@@ -337,13 +346,16 @@ namespace ConsoleApplication1
                 }
                 else if (MenuOption == 2)
                 {
-                    LoadGame(TrainingGame, ref Board);
-                    PlayGame(ref Board, ref Ships);
+                    LoadGame(TrainingGame, ref Board, ref FileError);
+                    if(FileError == false)
+                    {
+                        PlayGame(ref Board, ref Ships);
+                    }
                 }
-                else
+                /*else
                 {
                     Console.WriteLine("Enter correct Value");
-                }
+                }*/
             }
         }
     }
