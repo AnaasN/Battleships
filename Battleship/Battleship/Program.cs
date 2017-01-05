@@ -1,4 +1,4 @@
-// Notre Dame College - Computer Science A Level Year 1 - Trial Exam January 2017 do not reproduce unless allowed by notre dame
+// Notre Dame College - Computer Science A Level Year 1 - Trial Exam January 2017 do not reproduce unless allowed by notre dame catholic sixth form.
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -15,15 +15,16 @@ namespace ConsoleApplication1
             public int Size;
         }
 
-        const string TrainingGame = @"\Visual Studio 2015\Projects\Training.txt";
+        const string TrainingGame = @"File path to \Training.txt";
+        const string SaveFilePath = @"File path to \Save.txt";
 
-        private static void GetRowColumn(ref int Row, ref int Column)
+        private static void GetRowColumn(ref int Row, ref int Column,ref char[,] Board)
         {
             string inColumn;
             string inRow;
             bool UserInputFailled = false;
             bool OutOfRange = false;
-           
+            
             while (!UserInputFailled)
             {
                 Console.Write("Please enter column: ");
@@ -43,6 +44,11 @@ namespace ConsoleApplication1
                     Column = -1;
                     Row = -1;
                 }
+                if(Column == 10 && Column == 10)
+                {
+                    SaveGame(ref Board);
+                }
+
                 if (Column >= 0 && Column <= 9 && Row >= 0 && Row <= 9)
                 {
                     OutOfRange = false;
@@ -65,7 +71,7 @@ namespace ConsoleApplication1
         {
             int Row = 0;
             int Column = 0;
-            GetRowColumn(ref Row, ref Column);
+            GetRowColumn(ref Row, ref Column, ref Board);
             if (Board[Row, Column] == 'm' || Board[Row, Column] == 'h')
             {
                 Console.WriteLine("Sorry, you have already shot at the square (" + Column + "," + Row + "). Please try again.");
@@ -252,6 +258,7 @@ namespace ConsoleApplication1
                     }
                 }
                 Console.WriteLine();
+                
             }
         }
 
@@ -307,6 +314,7 @@ namespace ConsoleApplication1
                 {
                     Console.WriteLine("All ships sunk!");
                     Console.WriteLine();
+                    //SaveGame(ref Board);
                 }
             }
         }
@@ -346,17 +354,35 @@ namespace ConsoleApplication1
                 }
                 else if (MenuOption == 2)
                 {
+                    Console.WriteLine("!To save the game enter 10 as coloumn and 10 as row!");
                     LoadGame(TrainingGame, ref Board, ref FileError);
                     if(FileError == false)
                     {
                         PlayGame(ref Board, ref Ships);
                     }
                 }
+                
                 /*else
                 {
                     Console.WriteLine("Enter correct Value");
                 }*/
             }
+        }
+
+        static void SaveGame(ref char[,] Board)
+        {
+            StreamWriter Save = new StreamWriter(SaveFilePath);
+            for (int Row = 0; Row < 10; Row++)
+            {
+                for (int Column = 0; Column < 10; Column++)
+                {
+                    Save.Write(Board[Row, Column]);
+                }
+                Save.Write("\n");
+            }
+            Save.Flush();
+            Save.Close();
+            Console.WriteLine("!GAME STATE SAVED!");
         }
     }
 }
