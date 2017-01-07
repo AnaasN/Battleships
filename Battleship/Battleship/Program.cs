@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ConsoleApplication1
+namespace BattleShips
 {
     class Program
     {
@@ -15,8 +15,8 @@ namespace ConsoleApplication1
             public int Size;
         }
 
-        const string TrainingGame = @"File path to \Training.txt";
-        const string SaveFilePath = @"File path to \Save.txt";
+        const string TrainingGame = @"C:\Training.txt";
+        const string SaveFilePath = @"\Save.txt";
 
         private static void GetRowColumn(ref int Row, ref int Column,ref char[,] Board)
         {
@@ -37,33 +37,22 @@ namespace ConsoleApplication1
                 {
                     Column = int.Parse(inColumn);
                     Row = int.Parse(inRow);
-
                 }
                 catch
                 {
                     Column = -1;
                     Row = -1;
                 }
-                if(Column == 10 && Column == 10)
-                {
-                    SaveGame(ref Board);
-                }
+                if(Column == 10 && Column == 10) SaveGame(ref Board);//saves the game state
 
-                if (Column >= 0 && Column <= 9 && Row >= 0 && Row <= 9)
-                {
-                    OutOfRange = false;
-                }
+                if (Column >= 0 && Column <= 9 && Row >= 0 && Row <= 9) OutOfRange = false;
                 else
                 {
                     Console.WriteLine("Incorrect Placement, has to be a numerical value between 0 and 9.");
                     OutOfRange = true;
                 }
-                if(!OutOfRange)
-                {
-                    UserInputFailled = true;
-                }
-               
-            }
+                if(!OutOfRange) UserInputFailled = true;
+            }//end while.
 
         }
 
@@ -119,8 +108,7 @@ namespace ConsoleApplication1
             {
                 Console.WriteLine("An error has occoured while attempting to read the Training.txt file.\n  Please check the file and restart.");
                 inFileError = true;
-            }
-            
+            } 
         }
 
         private static void PlaceRandomShips(ref char[,] Board, ShipType[] Ships)
@@ -264,7 +252,10 @@ namespace ConsoleApplication1
 
         private static void DisplayMenu()
         {
-            Console.WriteLine("MAIN MENU");
+            Console.WriteLine(@" _____     _        _____            ");
+            Console.WriteLine(@"|     |___|_|___   |     |___ ___ _ _ ");
+            Console.WriteLine(@"| | | | .'| |   |  | | | | -_|   | | |");
+            Console.WriteLine(@"|_|_|_|__,|_|_|_|  |_|_|_|___|_|_|___|");
             Console.WriteLine("");
             Console.WriteLine("1. Start new game");
             Console.WriteLine("2. Load training game");
@@ -335,11 +326,12 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)//exception handling added.
         {
-
             ShipType[] Ships = new ShipType[5];
             char[,] Board = new char[10, 10];
             int MenuOption = 0;
             bool FileError = false;
+
+            StartBanner();
 
             while (MenuOption != 9)
             {
@@ -347,13 +339,16 @@ namespace ConsoleApplication1
                 SetUpShips(ref Ships);
                 DisplayMenu();
                 MenuOption = GetMainMenuChoice();
+
                 if (MenuOption == 1)
                 {
+                    NewGameBanner();
                     PlaceRandomShips(ref Board, Ships);
                     PlayGame(ref Board, ref Ships);
                 }
                 else if (MenuOption == 2)
                 {
+                    TrainingBanner();
                     Console.WriteLine("!To save the game enter 10 as coloumn and 10 as row!");
                     LoadGame(TrainingGame, ref Board, ref FileError);
                     if(FileError == false)
@@ -361,11 +356,6 @@ namespace ConsoleApplication1
                         PlayGame(ref Board, ref Ships);
                     }
                 }
-                
-                /*else
-                {
-                    Console.WriteLine("Enter correct Value");
-                }*/
             }
         }
 
@@ -384,5 +374,43 @@ namespace ConsoleApplication1
             Save.Close();
             Console.WriteLine("!GAME STATE SAVED!");
         }
+
+        //Graphics
+
+        static void StartBanner()
+        {
+            Console.WriteLine(@"######                                    #####                         ");
+            Console.WriteLine(@"#     #   ##   ##### ##### #      ###### #     # #    # # #####   ####  ");
+            Console.WriteLine(@"#     #  #  #    #     #   #      #      #       #    # # #    # #      ");
+            Console.WriteLine(@"######  #    #   #     #   #      #####   #####  ###### # #    #  ####  ");
+            Console.WriteLine(@"#     # ######   #     #   #      #            # #    # # #####       # ");
+            Console.WriteLine(@"#     # #    #   #     #   #      #      #     # #    # # #      #    # ");
+            Console.WriteLine(@"######  #    #   #     #   ###### ######  #####  #    # # #       ####  ");
+        }
+
+        static void TrainingBanner()
+        {
+            Console.WriteLine(@" _______        _       _             ");
+            Console.WriteLine(@"|__   __|      (_)     (_)            ");
+            Console.WriteLine(@"   | |_ __ __ _ _ _ __  _ _ __   __ _ ");
+            Console.WriteLine(@"   | | '__/ _` | | '_ \| | '_ \ / _` |");
+            Console.WriteLine(@"   | | | | (_| | | | | | | | | | (_| |");
+            Console.WriteLine(@"   |_|_|  \__,_|_|_| |_|_|_| |_|\__, |");
+            Console.WriteLine(@"                                 __/ |");
+            Console.WriteLine(@"                                |___/ ");
+        }
+
+        static void NewGameBanner()
+        {
+            Console.WriteLine(@"..................................................................");
+            Console.WriteLine(@".%%..%%..%%%%%%..%%...%%...........%%%%....%%%%...%%...%%..%%%%%%.");
+            Console.WriteLine(@".%%%.%%..%%......%%...%%..........%%......%%..%%..%%%.%%%..%%.....");
+            Console.WriteLine(@".%%.%%%..%%%%....%%.%.%%..........%%.%%%..%%%%%%..%%.%.%%..%%%%...");
+            Console.WriteLine(@".%%..%%..%%......%%%%%%%..........%%..%%..%%..%%..%%...%%..%%.....");
+            Console.WriteLine(@".%%..%%..%%%%%%...%%.%%............%%%%...%%..%%..%%...%%..%%%%%%.");
+            Console.WriteLine(@"..................................................................");
+        }
+
+        //Graphics
     }
 }
